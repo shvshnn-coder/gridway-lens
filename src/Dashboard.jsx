@@ -76,6 +76,32 @@ const newReturning = [
   { name: "New", v: 63 },
   { name: "Returning", v: 37 },
 ];
+const spending = [
+  { name: "Premium · RM150+", v: 22 },
+  { name: "Mid · RM50–150", v: 48 },
+  { name: "Budget · under RM50", v: 30 },
+];
+const occupation = [
+  { name: "Working professional", v: 58 },
+  { name: "Student", v: 31 },
+  { name: "Other", v: 11 },
+];
+const residency = [
+  { name: "Local", v: 71 },
+  { name: "International", v: 29 },
+];
+const nationality = [
+  { name: "Malaysia", v: 71 },
+  { name: "Singapore", v: 9 },
+  { name: "Indonesia", v: 6 },
+  { name: "China", v: 5 },
+  { name: "India", v: 4 },
+  { name: "Other", v: 5 },
+];
+const trafficOrigin = [
+  { name: "Online", v: 82 },
+  { name: "Offline / others", v: 18 },
+];
 const saveVelocity = [
   { d: "Day 0", s: 40 }, { d: "Day 2", s: 130 }, { d: "Day 4", s: 260 },
   { d: "Day 6", s: 430 }, { d: "Day 8", s: 690 }, { d: "Day 10", s: 880 },
@@ -299,6 +325,70 @@ function Audience() {
           </ResponsiveContainer>
         </Panel>
       </div>
+
+      <div className="gl-grid">
+        <Panel title="Spending power" sub="estimated spend tier per attendee" span={2}>
+          <div className="gl-spend-hi">
+            <div>
+              <div className="gl-spend-label">Avg. spend / attendee</div>
+              <div className="gl-spend-val">RM 86</div>
+            </div>
+            <span className="gl-delta up"><ArrowUpRight size={12} />+14% vs KL avg</span>
+          </div>
+          {spending.map((s, i) => (
+            <div className="gl-bar-row" key={s.name}>
+              <span className="gl-bar-label xwide">{s.name}</span>
+              <span className="gl-bar-track"><i style={{ width: `${s.v * 1.7}%`, background: SERIES[i % SERIES.length] }} /></span>
+              <b>{s.v}%</b>
+            </div>
+          ))}
+        </Panel>
+        <Panel title="Working vs students" sub="life-stage mix">
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie data={occupation} dataKey="v" nameKey="name" innerRadius={50} outerRadius={80} paddingAngle={3} stroke="none">
+                {occupation.map((_, i) => <Cell key={i} fill={SERIES[i % SERIES.length]} />)}
+              </Pie>
+              <Tooltip contentStyle={tipStyle} />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="gl-legend wrap">
+            {occupation.map((o, i) => (
+              <span key={o.name}><i style={{ background: SERIES[i % SERIES.length] }} />{o.name} {o.v}%</span>
+            ))}
+          </div>
+        </Panel>
+      </div>
+
+      <div className="gl-grid">
+        <Panel title="Local vs international" sub="resident vs visitor">
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie data={residency} dataKey="v" nameKey="name" innerRadius={50} outerRadius={80} paddingAngle={3} stroke="none">
+                {residency.map((_, i) => <Cell key={i} fill={i ? C.rose : C.teal} />)}
+              </Pie>
+              <Tooltip contentStyle={tipStyle} />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="gl-legend">
+            <span><i style={{ background: C.teal }} />Local 71%</span>
+            <span><i style={{ background: C.rose }} />International 29%</span>
+          </div>
+        </Panel>
+        <Panel title="Top nationalities" sub="where your guests come from" span={2}>
+          {nationality.map((n, i) => (
+            <div className="gl-bar-row" key={n.name}>
+              <span className="gl-bar-label">{n.name}</span>
+              <span className="gl-bar-track"><i style={{ width: `${n.v}%`, background: i === 0 ? C.teal : C.rose }} /></span>
+              <b>{n.v}%</b>
+            </div>
+          ))}
+          <div className="gl-gap" style={{ marginTop: 12 }}>
+            <Sparkles size={14} color={C.amberHi} />
+            <span><b>29% international.</b> A meaningful visitor share — a signal for tourism boards and a wedge competitors covering only ticketing or tourism listings can't match.</span>
+          </div>
+        </Panel>
+      </div>
     </>
   );
 }
@@ -339,17 +429,33 @@ function Discovery() {
           </div>
         </Panel>
       </div>
-      <Panel title="Save velocity" sub="cumulative saves after listing went live">
-        <ResponsiveContainer width="100%" height={220}>
-          <LineChart data={saveVelocity} margin={{ left: -14 }}>
-            <CartesianGrid stroke={C.hair} vertical={false} />
-            <XAxis dataKey="d" tick={axis} axisLine={false} tickLine={false} />
-            <YAxis tick={axis} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={tipStyle} />
-            <Line type="monotone" dataKey="s" stroke={C.amber} strokeWidth={2.5} dot={{ r: 3, fill: C.amber }} />
-          </LineChart>
-        </ResponsiveContainer>
-      </Panel>
+      <div className="gl-grid">
+        <Panel title="Traffic origin" sub="online vs offline acquisition">
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie data={trafficOrigin} dataKey="v" nameKey="name" innerRadius={50} outerRadius={80} paddingAngle={3} stroke="none">
+                {trafficOrigin.map((_, i) => <Cell key={i} fill={i ? C.faint : C.amber} />)}
+              </Pie>
+              <Tooltip contentStyle={tipStyle} />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="gl-legend">
+            <span><i style={{ background: C.amber }} />Online 82%</span>
+            <span><i style={{ background: C.faint }} />Offline / others 18%</span>
+          </div>
+        </Panel>
+        <Panel title="Save velocity" sub="cumulative saves after listing went live" span={2}>
+          <ResponsiveContainer width="100%" height={220}>
+            <LineChart data={saveVelocity} margin={{ left: -14 }}>
+              <CartesianGrid stroke={C.hair} vertical={false} />
+              <XAxis dataKey="d" tick={axis} axisLine={false} tickLine={false} />
+              <YAxis tick={axis} axisLine={false} tickLine={false} />
+              <Tooltip contentStyle={tipStyle} />
+              <Line type="monotone" dataKey="s" stroke={C.amber} strokeWidth={2.5} dot={{ r: 3, fill: C.amber }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </Panel>
+      </div>
     </>
   );
 }
@@ -677,6 +783,11 @@ const CSS = `
 .gl-bar-row { display: flex; align-items: center; gap: 9px; margin-bottom: 11px; font-size: 12.5px; color: ${C.mut}; }
 .gl-bar-label { width: 92px; flex-shrink: 0; }
 .gl-bar-label.wide { width: 120px; }
+.gl-bar-label.xwide { width: 150px; }
+.gl-spend-hi { display: flex; align-items: center; justify-content: space-between;
+  padding: 0 0 14px; margin-bottom: 14px; border-bottom: 1px solid ${C.hair}; }
+.gl-spend-label { font-size: 11px; color: ${C.mut}; text-transform: uppercase; letter-spacing: 0.07em; }
+.gl-spend-val { font-family: 'DM Serif Display', serif; font-size: 28px; margin-top: 4px; }
 .gl-bar-track { flex: 1; height: 8px; background: ${C.panel2}; border-radius: 5px; overflow: hidden; }
 .gl-bar-track i { display: block; height: 100%; border-radius: 5px; }
 .gl-bar-row b { font-family: 'DM Mono', monospace; color: ${C.txt}; width: 34px; text-align: right; }
