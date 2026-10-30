@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import LiveEvents from './LiveEvents.jsx';
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line, RadarChart, Radar,
   PolarGrid, PolarAngleAxis, PolarRadiusAxis, PieChart, Pie, Cell,
@@ -664,8 +665,8 @@ export default function GridWayLens() {
       <main className="gl-main">
         <header className="gl-top">
           <div>
-            <div className="gl-acct">Kongsi KL</div>
-            <div className="gl-acct-sub">Creative venue & event organiser · Kuala Lumpur</div>
+            <div className="gl-acct">GridWay</div>
+            <div className="gl-acct-sub">Public event inventory · No sign-in required</div>
           </div>
           <div className="gl-controls">
             <div className="gl-toggle">
@@ -675,12 +676,15 @@ export default function GridWayLens() {
                 </button>
               ))}
             </div>
-            <div className="gl-range">Last 12 weeks ▾</div>
+            <div className="gl-range">{tab === 'overview' || tab === 'events' ? 'Current published events' : 'Design demonstration'}</div>
           </div>
         </header>
         <div className="gl-body">
           <h1 className="gl-h1">{active.label}</h1>
-          <View />
+          {tab === 'overview' || tab === 'events' ? <LiveEvents overview={tab === 'overview'} /> : <>
+            <p className="gl-demo-notice" role="status">Demo data — this section is a design preview, not measured GridWay activity.</p>
+            <View />
+          </>}
         </div>
       </main>
     </div>
